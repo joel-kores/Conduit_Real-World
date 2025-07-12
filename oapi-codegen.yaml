@@ -1,0 +1,7 @@
+package: generated
+generate:
+  - types
+  - chi-server
+  - spec
+output: internal/generated/api.gen.go
+input: api/openapi.yml
