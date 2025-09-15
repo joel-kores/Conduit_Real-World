@@ -20,7 +20,7 @@ type DatabaseConfig struct {
 }
 
 func NewDatabase(config DatabaseConfig) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s port=%s password=%s dbname=%s sslmode=&s", config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode)
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
