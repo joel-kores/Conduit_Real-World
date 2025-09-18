@@ -27,6 +27,30 @@ func (r *PostgresUserRepository) CreateUser(person *user.User) error {
 	return nil
 }
 
+func (r *PostgresUserRepository) FindUserByID(id string) (*user.User, error){
+	var u user.User
+	result := r.db.Where("id=?", id).First(&u)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return nil, user.ErrUserNotFound
+		}
+		return nil, result.Error
+	}
+	return &u, nil
+}
+
+func (r *PostgresUserRepository) FindUserByEmail(email string) (*user.User, error){
+	var u user.User
+	result := r.db.Where("email=?", email).First(&u)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return nil, user.ErrUserNotFound
+		}
+		return nil, result.Error
+	}
+	return &u, nil
+}
+
 func (r *PostgresUserRepository) GetUser(username string) (*user.User, error) {
 	var u user.User
 	result := r.db.Where("username=?", username).First(&u)
@@ -57,6 +81,15 @@ func (r *PostgresUserRepository) Delete (id string) error {
 		return user.ErrUserNotFound
 	}
 	return nil
+}
+
+func (r *PostgresUserRepository) UserExistsByEmail(email string) (bool, error) {
+	var count int64
+	result := r.db.Model(&user.User{}).Where("email=?", email).Count(&count)
+	if result.Error != nil {
+		return false, result.Error
+	}
+	return count > 0, nil
 }
 
 func isDuplicatedKeyError(err error) bool {

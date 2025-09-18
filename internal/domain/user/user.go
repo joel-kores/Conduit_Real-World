@@ -28,16 +28,16 @@ func (u *User) CheckPassword(password string) bool {
 	return err == nil
 }
 
-// type LoginRequest struct {
-// 	Email    string `json:"email" validate:"required,email"`
-// 	Password string `json:"password" validate:"required,min=8"`
-// }
+type LoginRequest struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=8"`
+}
 
-// type RegisterRequest struct {
-// 	UserName string `json:"username" validate:"required,username"`
-// 	Email    string `json:"email" validate:"required,email"`
-// 	Password string `json:"password" validate:"required,min=8"`
-// }
+type RegisterRequest struct {
+	UserName string `json:"username" validate:"required,username"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=8"`
+}
 
 // type AuthResponse struct {
 // 	Email       string `json:"email"`
