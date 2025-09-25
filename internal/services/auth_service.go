@@ -2,19 +2,18 @@ package services
 
 import (
 	"github.com/joel-kores/Conduit_Real-World/internal/domain/user"
-	"github.com/joel-kores/Conduit_Real-World/internal/repository"
 	"github.com/joel-kores/Conduit_Real-World/pkg/jwt"
 	"github.com/joel-kores/Conduit_Real-World/pkg/logger"
 )
 
 type AuthService struct {
-	userRepo   repository.PostgresUserRepository
+	userRepo   user.UserRepository
 	jwtManager *jwt.JWTManager
 	logger     logger.Logger
 }
 
 type AuthServiceConfig struct {
-	UserRepo   repository.PostgresUserRepository
+	UserRepo   user.UserRepository
 	JWTManager *jwt.JWTManager
 	Logger     logger.Logger
 }

@@ -63,7 +63,7 @@ func (r *PostgresUserRepository) GetUser(username string) (*user.User, error) {
 	return &u, nil
 }
 
-func (r *PostgresUserRepository) Update(u *user.User) error {
+func (r *PostgresUserRepository) UpdateUser(u *user.User) error {
 	u.UpdatedAt = time.Now()
 	result := r.db.Save(u)
 	if result.Error != nil {
@@ -72,7 +72,7 @@ func (r *PostgresUserRepository) Update(u *user.User) error {
 	return nil
 }
 
-func (r *PostgresUserRepository) Delete (id string) error {
+func (r *PostgresUserRepository) DeleteUser (id string) error {
 	result := r.db.Where("id = ?", id).Delete(&user.User{})
 	if result.Error != nil {
 		return result.Error
