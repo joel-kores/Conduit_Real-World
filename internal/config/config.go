@@ -25,22 +25,22 @@ type DatabaseConfig struct {
 }
 
 func LoadConfig() *Config {
-	accessTokenDur, _ := strconv.Atoi(getEnv("ACCESS_TOKEN_DURATION", "15"))
-	refreshTokenDuration, _ := strconv.Atoi(getEnv("REFRESH_TOKEN_DURATION", "1440"))
-	
+	accessTokenDur, _ := strconv.Atoi(getEnv("CONDUIT_ACCESS_TOKEN_DURATION", "15"))
+	refreshTokenDuration, _ := strconv.Atoi(getEnv("CONDUIT_REFRESH_TOKEN_DURATION", "1440"))
+
 	return &Config{
-		ServerPort:      getEnv("SERVER_PORT", ":8080"),
-		JWTSecret:       getEnv("JWT_SECRET", "your-secret-key=must-be-really-secure"),
+		ServerPort:      getEnv("CONDUIT_SERVER_PORT", ":8080"),
+		JWTSecret:       getEnv("CONDUIT_JWT_SECRET", "your-secret-key=must-be-really-secure"),
 		AccessTokenDur:  time.Duration(accessTokenDur) * time.Minute,
 		RefreshTokenDur: time.Duration(refreshTokenDuration) * time.Minute,
-		LogLevel:        getEnv("LOG_LEVEL", "info"),
+		LogLevel:        getEnv("CONDUIT_LOG_LEVEL", "info"),
 		Database: DatabaseConfig{
-			Host:     getEnv("DB_HOST", "localhost"),
-			Port:     getEnv("DB_PORT", "5432"),
-			User:     getEnv("DB_USER", "conduituser"),
-			Password: getEnv("DB_PASSWORD", "conduitpass"),
-			DBName:   getEnv("DB_NAME", "conduitdb"),
-			SSLMode:  getEnv("DB_SSLMODE", "disable"),
+			Host:     getEnv("CONDUIT_DB_HOST", "localhost"),
+			Port:     getEnv("CONDUIT_DB_PORT", "5432"),
+			User:     getEnv("CONDUIT_DB_USER", "conduituser"),
+			Password: getEnv("CONDUIT_DB_PASSWORD", "conduitpass"),
+			DBName:   getEnv("CONDUIT_DB_NAME", "conduitdb"),
+			SSLMode:  getEnv("CONDUIT_DB_SSLMODE", "disable"),
 		},
 	}
 }

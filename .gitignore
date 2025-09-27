@@ -18,9 +18,45 @@
 .history/*
 
 
-#System Files
+# System Files
 .DS_Store
 Thumbs.db
 
+# Environment Variables
+.env
+.env.local
+.env.production
+.env.staging
 
+# Go build artifacts
 bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Go mod cache
+go.sum
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Database files (if using local SQLite for testing)
+*.db
+*.sqlite
+*.sqlite3
+
+# Coverage reports
+coverage.out
+coverage.html
