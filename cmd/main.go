@@ -47,10 +47,7 @@ func main() {
 
 	// authHandler := handlers.NewAuthHandler(authService, appLogger)
 
-	handler := &handlers.AuthHandler{
-		AuthService: authService,
-		Logger:      appLogger,
-	}
+	handler := handlers.NewCompleteHandler(authService, appLogger)
 
 	router := generated.Handler(handler)
 

@@ -31,7 +31,7 @@ func (h *AuthHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	mapReq := user.RegisterRequest{
-		Email: req.Email,
+		Email:    req.Email,
 		UserName: req.Username,
 		Password: req.Password,
 	}
@@ -98,4 +98,16 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(resp)
+}
+
+func (h *AuthHandler) GetCurrentUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotImplemented)
+	w.Write([]byte(`{"errors":{"body":["GetCurrentUser not implemented yet"]}}`))
+}
+
+func (h *AuthHandler) UpdateCurrentUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNotImplemented)
+	w.Write([]byte(`{"errors":{"body":["UpdateCurrentUser not implemented yet"]}}`))
 }
