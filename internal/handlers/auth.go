@@ -24,16 +24,16 @@ func NewAuthHandler(authService *services.AuthService, logger logger.Logger) *Au
 }
 
 func (h *AuthHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var req generated.NewUser
+	var req generated.NewUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	mapReq := user.RegisterRequest{
-		Email:    req.Email,
-		UserName: req.Username,
-		Password: req.Password,
+		Email:    req.User.Email,
+		UserName: req.User.Username,
+		Password: req.User.Password,
 	}
 
 	u, err := h.AuthService.Register(mapReq)
@@ -64,15 +64,15 @@ func (h *AuthHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
-	var req generated.LoginUser
+	var req generated.LoginUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	mapReq := user.LoginRequest{
-		Email:    req.Email,
-		Password: req.Password,
+		Email:    req.User.Email,
+		Password: req.User.Password,
 	}
 	u, err := h.AuthService.Login(mapReq)
 

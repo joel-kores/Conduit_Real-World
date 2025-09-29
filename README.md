@@ -2,7 +2,7 @@
 
 > ### Go codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
-### [Demo](https://demo.realworld.build/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
+### [RealWorld](https://github.com/gothinkster/realworld)
 
 This codebase was created to demonstrate a fully fledged fullstack application built with **Go** including CRUD operations, authentication, routing, pagination, and more.
 
@@ -28,13 +28,19 @@ For more information on how this works with other frontends/backends, head over 
 
 ## 🏗️ **Architecture & Technology Stack**
 
-### **Backend Framework**
+### **Technology Stack**
 - **Go 1.21+** - Core language
 - **Chi Router** - HTTP routing and middleware
 - **GORM** - ORM for database operations
 - **PostgreSQL** - Primary database
 - **JWT** - Authentication tokens
 - **OpenAPI 3.0** - API specification and code generation
+
+### **Development Tools**
+- **Air** - Hot-reload for development
+- **Delve** - Go debugger with VS Code integration
+- **oapi-codegen** - Code generation from OpenAPI specs
+- **Custom Scripts** - Database management utilities
 
 ### **Project Structure**
 ```
@@ -57,8 +63,14 @@ For more information on how this works with other frontends/backends, head over 
 │   └── db.sh            # Database utilities
 ├── api/                  # API specifications
 │   └── openapi.yml      # OpenAPI 3.0 spec
-├── .env                  # Environment variables (not in git)
-└── example.env          # Environment template
+├── .vscode/               # VS Code configuration
+│   └── launch.json       # Debug configurations
+├── tmp/                  # Air temporary files
+├── .air.toml            # Air configuration
+├── .env                 # Environment variables (not in git)
+├── example.env          # Environment template
+├── Makefile             # Build and development commands
+└── README.md            # This file
 ```
 
 ### **Design Patterns**
@@ -74,6 +86,8 @@ For more information on how this works with other frontends/backends, head over 
 - Go 1.21 or higher
 - PostgreSQL 12+
 - Git
+- Air (for hot-reload development) - `go install github.com/air-verse/air@latest`
+- Delve (for debugging) - `go install github.com/go-delve/delve/cmd/dlv@latest`
 
 ### **Installation**
 
@@ -88,13 +102,22 @@ For more information on how this works with other frontends/backends, head over 
    go mod tidy
    ```
 
-3. **Set up environment variables**
+3. **Install development tools**
+   ```bash
+   # Install Air for hot-reload
+   go install github.com/air-verse/air@latest
+
+   # Install Delve for debugging
+   go install github.com/go-delve/delve/cmd/dlv@latest
+   ```
+
+4. **Set up environment variables**
    ```bash
    cp example.env .env
    # Edit .env with your configuration
    ```
 
-4. **Set up PostgreSQL database**
+5. **Set up PostgreSQL database**
    ```bash
    # Automated setup (recommended)
    ./scripts/setup-db.sh
@@ -104,8 +127,12 @@ For more information on how this works with other frontends/backends, head over 
    sudo -u postgres psql -c "CREATE DATABASE conduitdb OWNER conduituser;"
    ```
 
-5. **Start the application**
+6. **Start the application**
    ```bash
+   # Development with hot-reload (recommended)
+   make dev
+
+   # OR production mode
    go run ./cmd/main.go
    ```
 
@@ -135,6 +162,62 @@ CONDUIT_DB_SSLMODE=disable
 ```
 
 ## 🛠️ **Development Tools**
+
+### **Development Commands**
+```bash
+# Production build and run
+make build              # Build binary
+make run               # Build and run
+
+# Development with hot-reload
+make dev               # Start with auto-reload using Air
+
+# Code generation
+make gen               # Generate API code from OpenAPI spec
+
+# Testing
+make test              # Run all tests
+```
+
+### **Hot-Reload Development**
+The project includes **Air** for automatic rebuilding and restarting during development:
+
+```bash
+# Start development server with hot-reload
+make dev
+
+# The server will automatically:
+# - Watch for .go file changes
+# - Rebuild the application
+# - Restart the server
+# - Show build errors in real-time
+```
+
+### **Debugging**
+Full debugging support with VS Code and Delve:
+
+```bash
+# Debug with hot-reload
+make debug-dev         # Start with debugger + hot-reload
+
+# Debug production build
+make debug             # Start with debugger only
+```
+
+**VS Code Debugging:**
+1. Set breakpoints in your code (click left of line numbers)
+2. Press `F5` or use Run > Start Debugging
+3. Choose from available configurations:
+   - **Launch Package** - Debug from VS Code directly
+   - **Connect to Server** - Attach to running debug session
+   - **Attach to Process** - Attach to any Go process
+
+**Debug Controls:**
+- `F5` - Continue/Start debugging
+- `F10` - Step over
+- `F11` - Step into
+- `Shift+F11` - Step out
+- `Shift+F5` - Stop debugging
 
 ### **Database Management**
 ```bash
@@ -227,6 +310,60 @@ curl -X POST http://localhost:8080/api/users/login \
 - `GET /api/articles/{slug}/comments` - Get comments
 - `POST /api/articles/{slug}/comments` - Add comment
 - `DELETE /api/articles/{slug}/comments/{id}` - Delete comment
+
+## 👨‍💻 **Development Workflow**
+
+### **Daily Development**
+1. **Start development server:**
+   ```bash
+   make dev
+   ```
+
+2. **Make changes to your code** - The server automatically reloads
+
+3. **Debug when needed:**
+   ```bash
+   # Start with debugger
+   make debug-dev
+
+   # In VS Code: F5 > "Connect to Server"
+   ```
+
+4. **Test your changes:**
+   ```bash
+   make test
+   ```
+
+5. **Check database:**
+   ```bash
+   ./scripts/db.sh status
+   ./scripts/db.sh users
+   ```
+
+### **Adding New Features**
+1. **Update OpenAPI spec** (`api/openapi.yml`)
+2. **Regenerate code:**
+   ```bash
+   make gen
+   ```
+3. **Implement handlers, services, and repositories**
+4. **Test your implementation**
+5. **Update documentation**
+
+### **Common Development Tasks**
+```bash
+# View logs in real-time
+tail -f tmp/build-errors.log
+
+# Reset database for testing
+./scripts/db.sh reset
+
+# Generate new API code after spec changes
+make gen
+
+# Run specific tests
+go test ./internal/services/...
+```
 
 ## 🧪 **Testing**
 

@@ -12,6 +12,7 @@ type User struct {
 	Bio      string `json:"bio" gorm:"type:text"`
 	Email    string `json:"email" gorm:"type:varchar(255);unique;not null"`
 	Image    string `json:"image" gorm:"type:varchar(255)"`
+	Token    string `json:"token" gorm:"-"`
 }
 
 func (u *User) SetPassword(password string) error {

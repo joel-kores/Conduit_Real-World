@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/joel-kores/Conduit_Real-World/internal/domain/user"
 	"github.com/joel-kores/Conduit_Real-World/pkg/jwt"
 	"github.com/joel-kores/Conduit_Real-World/pkg/logger"
@@ -53,21 +55,40 @@ func (s AuthService) Register(req user.RegisterRequest) (*user.User, error) {
 		return nil, err
 	}
 
+	// Generate token for the new user
+	token, err := s.jwtManager.Generate(fmt.Sprint(newUser.ID), newUser.Email)
+	if err != nil {
+		s.logger.Error("Error generating token", map[string]interface{}{"error": err.Error()})
+		return nil, err
+	}
+	newUser.Token = token
+
 	s.logger.Info("User registered successfully", map[string]interface{}{"user_id": newUser.ID})
 	return newUser, nil
 }
 
 func (s *AuthService) Login(req user.LoginRequest) (*user.User, error) {
 	s.logger.Info("user login attempt", map[string]interface{}{"email": req.Email})
-	user, err := s.userRepo.FindUserByEmail(req.Email)
+	u, err := s.userRepo.FindUserByEmail(req.Email)
 	if err != nil {
 		s.logger.Warn("User not found", map[string]interface{}{"email": req.Email})
-		return nil, err
+		return nil, user.ErrUserNotFound
 	}
-	if !user.CheckPassword(req.Password) {
+	if !u.CheckPassword(req.Password) {
 		s.logger.Warn("invalid password", map[string]interface{}{"email": req.Email})
+		return nil, user.ErrInvalidCredentials
+	}
+
+	// Generate JWT token
+	token, err := s.jwtManager.Generate(fmt.Sprint(u.ID), u.Email)
+	if err != nil {
+		s.logger.Error("failed to generate token", map[string]interface{}{"error": err.Error()})
 		return nil, err
 	}
-	s.logger.Info("user logged in successfully", map[string]interface{}{"user_id": user.ID})
-	return user, nil
+
+	// Set the token on the user
+	u.Token = token
+
+	s.logger.Info("user logged in successfully", map[string]interface{}{"user_id": u.ID})
+	return u, nil
 }
